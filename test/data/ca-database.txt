@@ -1,0 +1,1 @@
+R	22891130203504Z	160216203649Z	B1F531FD3B54C571	unknown	/C=US/ST=CA/L=San Francisco/O=Example Co/OU=techops/CN=client2/emailAddress=certs@example.com

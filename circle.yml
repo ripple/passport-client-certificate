@@ -1,0 +1,17 @@
+machine:
+  node:
+    version: 4.0.0
+test:
+  override:
+    - npm run lint
+    - XUNIT_FILE=${CIRCLE_TEST_REPORTS}/mocha.xml npm test --coverage -- -R spec-xunit-file
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run coveralls
+      - mv npmrc-env .npmrc
+      - if [ -z "$(npm info $(npm ls --depth=-1 2>/dev/null | head -1 | cut -f 1 -d " ") 2>/dev/null)" ] ; then npm publish ; fi
+general:
+  artifacts:
+    - "coverage/lcov-report"
