@@ -35,6 +35,7 @@
     "co": "^4.6.0",
     "co-mocha": "^1.1.2",
     "co-request": "^1.0.0",
+    "coveralls": "^2.11.6",
     "eslint": "^2.0.0",
     "eslint-config-standard": "^5.1.0",
     "eslint-plugin-promise": "^1.0.8",
