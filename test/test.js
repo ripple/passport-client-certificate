@@ -26,7 +26,7 @@ function createServer (app) {
     ca: caCert,
     crl: crl,
     requestCert: true,
-    rejectUnauthorized: true
+    rejectUnauthorized: false
   }
 
   server = https.createServer(options, app.callback()).listen(3000)
@@ -117,7 +117,7 @@ describe('middleware test', () => {
       const app = koa()
 
       passport.use(new ClientCertStrategy((fingerprint, info, done) => {
-        return done(null, fingerprint, info)
+        return done(null, {})
       }))
 
       app.use(passport.initialize())
@@ -125,13 +125,35 @@ describe('middleware test', () => {
       app.use(function * () { this.body = 'test' })
       createServer(app)
 
-      try {
-        yield request.get(invalidRequestOptions)
-        throw new Error('Request should not be successful')
-      } catch (err) {
-        assert.strictEqual(err.message, 'socket hang up')
-        assert.strictEqual(err.code, 'ECONNRESET')
-      }
+      const response = yield request.get(invalidRequestOptions)
+      assert.strictEqual(response.statusCode, 401)
+    })
+  })
+
+  describe('missing client certificate', () => {
+    const invalidRequestOptions = {
+      hostname: 'localhost',
+      url: 'https://localhost:3000',
+      path: '/',
+      method: 'GET',
+      ca: caCert
+    }
+
+    it('is not successful', function * () {
+      const app = koa()
+
+      passport.use(new ClientCertStrategy((fingerprint, info, done) => {
+        console.log(fingerprint)
+        return done(null, {})
+      }))
+
+      app.use(passport.initialize())
+      app.use(passport.authenticate('client-cert', {session: false}))
+      app.use(function * () { this.body = 'test' })
+      createServer(app)
+
+      const response = yield request.get(invalidRequestOptions)
+      assert.strictEqual(response.statusCode, 401)
     })
   })
 })
