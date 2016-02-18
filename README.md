@@ -1,4 +1,10 @@
-# passport-client-certificate
+# passport-client-certificate [![circle][circle-image]][circle-url] [![coveralls][coveralls-image]][coveralls-url]
+
+[circle-image]: https://circleci.com/gh/ripple/passport-client-certificate.svg?style=shield
+[circle-url]: https://circleci.com/gh/ripple/passport-client-certificate
+[coveralls-image]: https://coveralls.io/repos/ripple/passport-client-certificate/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/r/ripple/passport-client-certificate?branch=master
+
 
 [Passport](http://passportjs.org/) strategy for authenticating using client
 certificates.
