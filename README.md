@@ -23,26 +23,26 @@ $ npm install passport-client-cert
 
   The client cert authentication strategy authenticates requests based on the
   client certificate credentials submitted in the TLS handshake
- 
-  Applications must supply a `verify` callback which accepts a `fingerprint`
-  and an `info` object. The `info` object contains the `subject` and `issuer`
-  of the client certificate. It then calls the `done` callback supplying a
+
+  Applications must supply a `verify` callback which accepts the client
+  certificate. It then calls the `done` callback supplying a
   `user`.  User should be set to `false` if the credentials are not valid.  If
   an exception occured, `err` should be set.
- 
+
   Options:
     - `passReqToCallback`  when `true`, `req` is the first argument to the
        verify callback (default: `false`)
- 
+
   Examples:
- 
+
 ```javascript
   passport.use(new ClientCertStrategy(
-    function (fingerprint, info, done) {
+    function (certificate, done) {
       if (!config.auth.client_certificates_enabled) {
         return done(new UnauthorizedError('Unsupported authentication method'))
       }
- 
+
+      const fingerprint = clientCert.fingerprint.toUpperCase()
       Account.findByFingerprint(fingerprint)
         .then(function (userObj) {
           if (!userObj || userObj.is_disabled || userObj.fingerprint !== fingerprint) {
@@ -53,7 +53,7 @@ $ npm install passport-client-cert
     }))
 
 ```
- 
+
 #### Authenticate Requests
 
 Use `passport.authenticate()`, specifying the `'client-cert'` strategy, to
@@ -63,7 +63,7 @@ For example, as route middleware in an [Express](http://expressjs.com/)
 application:
 
 ```js
-app.post('/login', 
+app.post('/login',
   passport.authenticate('client-cert', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
