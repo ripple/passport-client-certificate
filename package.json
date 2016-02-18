@@ -1,6 +1,6 @@
 {
   "name": "passport-client-certificate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Passport middleware for client certificate authentication",
   "main": "index.js",
   "keywords": [

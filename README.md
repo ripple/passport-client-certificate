@@ -1,5 +1,7 @@
-# passport-client-certificate [![circle][circle-image]][circle-url] [![coveralls][coveralls-image]][coveralls-url]
+# passport-client-certificate [![npm][npm-image]][npm-url] [![circle][circle-image]][circle-url] [![coveralls][coveralls-image]][coveralls-url]
 
+[npm-image]: https://img.shields.io/npm/v/passport-client-certificate.svg?style=flat
+[npm-url]: https://npmjs.org/package/passport-client-certificate
 [circle-image]: https://circleci.com/gh/ripple/passport-client-certificate.svg?style=shield
 [circle-url]: https://circleci.com/gh/ripple/passport-client-certificate
 [coveralls-image]: https://coveralls.io/repos/ripple/passport-client-certificate/badge.svg?branch=master
@@ -19,7 +21,7 @@ middleware, including [Express](http://expressjs.com/). Optionally, using
 ## Install
 
 ```bash
-$ npm install passport-client-cert
+$ npm install passport-client-certificate
 ```
 
 ## Usage
