@@ -8,9 +8,8 @@ const Strategy = require('passport-strategy')
  * The client cert authentication strategy authenticates requests based on the
  * client certificate credentials submitted in the TLS handshake
  *
- * Applications must supply a `verify` callback which accepts a `fingerprint`
- * and an `info` object. The `info` object contains the `subject` and `issuer`
- * of the client certificate. It then calls the `done` callback supplying a
+ * Applications must supply a `verify` callback which accepts the client
+ * certificate. It then calls the `done` callback supplying a
  * `user`.  User should be set to `false` if the credentials are not valid.  If
  * an exception occured, `err` should be set.
  *
@@ -21,11 +20,12 @@ const Strategy = require('passport-strategy')
  * Examples:
  *
  * passport.use(new ClientCertStrategy(
- *   function (fingerprint, info, done) {
+ *   function (certificate, done) {
  *     if (!config.auth.client_certificates_enabled) {
  *       return done(new UnauthorizedError('Unsupported authentication method'))
  *     }
  *
+ *     const fingerprint = clientCert.fingerprint.toUpperCase()
  *     Account.findByFingerprint(fingerprint)
  *       .then(function (userObj) {
  *         if (!userObj || userObj.is_disabled || userObj.fingerprint !== fingerprint) {
@@ -96,17 +96,11 @@ class ClientCertStrategy extends Strategy {
       return
     }
 
-    const fingerprint = clientCert.fingerprint.toUpperCase()
-    const info = {
-      subject: clientCert.subject,
-      issuer: clientCert.issuer
-    }
-
     try {
       if (this._passReqToCallback) {
-        this._verify(req, fingerprint, info, this._verified.bind(this))
+        this._verify(req, clientCert, this._verified.bind(this))
       } else {
-        this._verify(fingerprint, info, this._verified.bind(this))
+        this._verify(clientCert, this._verified.bind(this))
       }
     } catch (err) {
       return this.error(err)

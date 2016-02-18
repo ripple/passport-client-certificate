@@ -63,27 +63,32 @@ describe('middleware test', () => {
       const app = koa()
       const userObj = {foo: 'bar'}
 
-      passport.use(new ClientCertStrategy((fingerprint, info, done) => {
+      passport.use(new ClientCertStrategy((certificate, done) => {
+        const fingerprint = certificate.fingerprint
+        const subject = certificate.subject
+        const issuer = certificate.issuer
+
         assert.strictEqual(fingerprint,
           'E4:E6:3E:7B:1D:8B:AD:22:C5:46:35:71:62:F2:FC:D9:0A:9A:47:5E')
-        assert.deepEqual(info, {
-          subject: {
-            C: 'US',
-            ST: 'CA',
-            L: 'San Francisco',
-            O: 'Example Co',
-            OU: 'techops',
-            CN: 'client1',
-            emailAddress: 'certs@example.com' },
-          issuer: {
-            C: 'US',
-            ST: 'CA',
-            L: 'San Francisco',
-            O: 'Example Co',
-            OU: 'techops',
-            CN: 'ca',
-            emailAddress: 'certs@example.com'
-          }
+
+        assert.deepEqual(subject, {
+          C: 'US',
+          ST: 'CA',
+          L: 'San Francisco',
+          O: 'Example Co',
+          OU: 'techops',
+          CN: 'client1',
+          emailAddress: 'certs@example.com'
+        })
+
+        assert.deepEqual(issuer, {
+          C: 'US',
+          ST: 'CA',
+          L: 'San Francisco',
+          O: 'Example Co',
+          OU: 'techops',
+          CN: 'ca',
+          emailAddress: 'certs@example.com'
         })
         return done(null, userObj)
       }))
@@ -116,7 +121,7 @@ describe('middleware test', () => {
     it('is not successful', function * () {
       const app = koa()
 
-      passport.use(new ClientCertStrategy((fingerprint, info, done) => {
+      passport.use(new ClientCertStrategy((certificate, done) => {
         return done(null, {})
       }))
 
@@ -142,8 +147,7 @@ describe('middleware test', () => {
     it('is not successful', function * () {
       const app = koa()
 
-      passport.use(new ClientCertStrategy((fingerprint, info, done) => {
-        console.log(fingerprint)
+      passport.use(new ClientCertStrategy((certificate, done) => {
         return done(null, {})
       }))
 
