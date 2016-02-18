@@ -11,6 +11,7 @@
     "username",
     "password",
     "client-cert",
+    "client-certificate",
     "certificates",
     "ssl"
   ],
@@ -21,12 +22,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ripple/passport-client-cert.git"
+    "url": "git@github.com:ripple/passport-client-certificate.git"
   },
   "author": "Ripple <info@ripple.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ripple/passport-client-cert/issues"
+    "url": "https://github.com/ripple/passport-client-certificate/issues"
   },
   "dependencies": {
     "passport-strategy": "^1.0.0"

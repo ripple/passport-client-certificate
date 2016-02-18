@@ -1,4 +1,4 @@
-# passport-client-cert
+# passport-client-certificate
 
 [Passport](http://passportjs.org/) strategy for authenticating using client
 certificates.
