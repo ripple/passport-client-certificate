@@ -135,6 +135,66 @@ describe('middleware test', () => {
     })
   })
 
+
+  describe('handling a request with untrusted client certificates', () => {
+    const validRequestOptions = {
+      hostname: 'localhost',
+      url: 'https://localhost:3000',
+      path: '/',
+      method: 'GET',
+      key: clientKey,
+      cert: clientCert,
+      rejectUnauthorized: false
+    }
+
+    it('is successful', function * () {
+      const app = koa()
+      const userObj = {foo: 'bar'}
+
+      passport.use(new ClientCertStrategy((certificate, done) => {
+        const fingerprint = certificate.fingerprint
+        const subject = certificate.subject
+        const issuer = certificate.issuer
+
+        assert.strictEqual(fingerprint,
+          'E4:E6:3E:7B:1D:8B:AD:22:C5:46:35:71:62:F2:FC:D9:0A:9A:47:5E')
+
+        assert.deepEqual(subject, {
+          C: 'US',
+          ST: 'CA',
+          L: 'San Francisco',
+          O: 'Example Co',
+          OU: 'techops',
+          CN: 'client1',
+          emailAddress: 'certs@example.com'
+        })
+
+        assert.deepEqual(issuer, {
+          C: 'US',
+          ST: 'CA',
+          L: 'San Francisco',
+          O: 'Example Co',
+          OU: 'techops',
+          CN: 'ca',
+          emailAddress: 'certs@example.com'
+        })
+        return done(null, userObj)
+      }))
+
+      app.use(passport.initialize())
+      app.use(passport.authenticate('client-cert', {session: false, allowUnauthorized: true}))
+      app.use(function * () {
+        assert(this.isAuthenticated())
+        assert.deepEqual(this.req.user, userObj)
+        this.body = 'test'
+      })
+      createServer(app)
+
+      const result = yield request.get(validRequestOptions)
+      assert.strictEqual(result.statusCode, 200)
+    })
+  })
+
   describe('missing client certificate', () => {
     const invalidRequestOptions = {
       hostname: 'localhost',

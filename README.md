@@ -40,6 +40,7 @@ $ npm install passport-client-certificate
   Options:
     - `passReqToCallback`  when `true`, `req` is the first argument to the
        verify callback (default: `false`)
+    - `allowUnauthorized` when `true` allows self-signed or certificates from untrusted CAs to be accepted.
 
   Examples:
 
