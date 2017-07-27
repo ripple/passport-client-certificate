@@ -44,7 +44,9 @@ class ClientCertStrategy extends Strategy {
   constructor (options, verify) {
     if (typeof options === 'function') {
       verify = options
-      options = {}
+      options = {
+        rejectUnauthorized: true
+      }
     }
     if (!verify) throw new Error('Client cert authentication strategy requires a verify function')
 
@@ -64,7 +66,7 @@ class ClientCertStrategy extends Strategy {
   authenticate (req, options) {
     // Requests must be authorized
     // (i.e. the certificate must be signed by at least one trusted CA)
-    if (!req.socket.authorized) {
+    if (!req.socket.authorized && options.rejectUnauthorized) {
       this.fail()
       return
     }
